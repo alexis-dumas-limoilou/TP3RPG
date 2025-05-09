@@ -1,12 +1,15 @@
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using TP3RPG.Model;
+using TP3RPG.Vues;
 
 namespace TP3RPG.Pages;
 
 public partial class CarteJeu : ContentPage
 {
     private Carte _Carte;
+    private Joystick _Joystick;
+    private Joueur _Joueur;
 
     public CarteJeu()
     {
@@ -43,9 +46,21 @@ public partial class CarteJeu : ContentPage
                     paint.Color = SKColors.Blue;
                     break;
             }
-            
-
             canvas.DrawRect(tuile.X * tuileSize, tuile.Y * tuileSize, tuileSize, tuileSize, paint);
         }
+    }
+    private void CalculerDeplacement(SKPoint touchPosition)
+    {
+        float dx = touchPosition.X - _Joystick.Center.X;
+        float dy = touchPosition.Y - _Joystick.Center.Y;
+
+        string direction = "";
+
+        if (Math.Abs(dx) > Math.Abs(dy))
+            direction = dx > 0 ? "droite" : "gauche";
+        else
+            direction = dy > 0 ? "bas" : "haut";
+
+        _Joueur.SeDeplacer(direction);
     }
 }
