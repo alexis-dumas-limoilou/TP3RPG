@@ -65,4 +65,16 @@
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Pages\CarteJeu.xaml.cs">
+	    <DependentUpon>CarteJeu.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\CarteJeu.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
