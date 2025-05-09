@@ -1,4 +1,6 @@
-﻿namespace TP3RPG
+﻿using TP3RPG.Pages;
+
+namespace TP3RPG
 {
     public partial class App : Application
     {
@@ -6,7 +8,7 @@
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            MainPage = new CarteJeu();
         }
     }
 }

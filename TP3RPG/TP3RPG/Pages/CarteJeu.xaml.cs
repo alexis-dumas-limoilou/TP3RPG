@@ -23,10 +23,27 @@ public partial class CarteJeu : ContentPage
 
         foreach (Tuile tuile in _Carte.Tuiles)
         {
-            SKPaint paint = new SKPaint
+            SKPaint paint = new SKPaint();
+            
+            switch(tuile.Type)
             {
-                Color = (tuile.Type == "Mur") ? SKColors.Gray : SKColors.Green
-            };
+                case "Mur":
+                    paint.Color = SKColors.Gray;
+                    break;
+                case "Herbe":
+                    paint.Color = SKColors.Green;
+                    break;
+                case "Barriere":
+                    paint.Color = SKColors.Orange;
+                    break;
+                case "Toit":
+                    paint.Color = SKColors.Red;
+                    break;
+                default:
+                    paint.Color = SKColors.Blue;
+                    break;
+            }
+            
 
             canvas.DrawRect(tuile.X * tuileSize, tuile.Y * tuileSize, tuileSize, tuileSize, paint);
         }

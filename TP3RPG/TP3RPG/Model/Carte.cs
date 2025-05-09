@@ -12,16 +12,43 @@ namespace TP3RPG.Model
 
         public Carte()
         {
-            Tuiles = new List<Tuile>
+            Tuiles = new List<Tuile>();
+            int tailleCarte = 20;
+            int milieuCarte = tailleCarte/2;
+
+            for(int i = 0; i<=tailleCarte; i++)
             {
-                new Tuile(0, 0, "Herbe"),
-                new Tuile(1, 0, "Mur"),
-                new Tuile(0, 1, "Sol"),
-                new Tuile(1, 1, "Herbe")
-            };
+                Tuiles.Add(new Tuile(0, i, "Barriere"));
+                Tuiles.Add(new Tuile(i, 0, "Barriere"));
+                Tuiles.Add(new Tuile(tailleCarte, i, "Barriere"));
+                Tuiles.Add(new Tuile(i, tailleCarte, "Barriere"));
+            }
 
-
+            for(int i = 1; i<tailleCarte; i++)
+            {
+                for (int j = 1; j < tailleCarte; j++)
+                {
+                    if (i >= milieuCarte-2 && j >= milieuCarte-2 && i <= milieuCarte+2 && j <= milieuCarte+2)
+                    {
+                        if ((i == milieuCarte && j == milieuCarte - 2) || (i >= milieuCarte-1 && i<=milieuCarte+1 && j==milieuCarte-1) || (j==milieuCarte))
+                        {
+                            Tuiles.Add(new Tuile(i, j, "Toit"));
+                        }
+                        else if (!(i == milieuCarte && j == milieuCarte + 2) && j>milieuCarte)
+                        {
+                            Tuiles.Add(new Tuile(i, j, "Mur"));
+                        }
+                        else if(!(i == milieuCarte && j == milieuCarte + 2))
+                        {
+                            Tuiles.Add(new Tuile(i, j, "Herbe"));
+                        }
+                    }
+                    else 
+                    { 
+                        Tuiles.Add(new Tuile(i, j, "Herbe"));
+                    }
+                }
+            }
         }
-
     }
 }

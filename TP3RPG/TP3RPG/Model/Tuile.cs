@@ -10,7 +10,7 @@ namespace TP3RPG.Model
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public string Type { get; } // "Herbe", "Mur", "Sol"
+        public string Type { get; }
 
         public Tuile(int x, int y, string type)
         {
