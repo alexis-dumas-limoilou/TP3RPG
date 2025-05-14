@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TP3RPG.Pages.PauseMenu"
+             x:Name="PauseMenuView">
+    
+    <Grid BackgroundColor="#80000000"
+          IsVisible="{Binding IsVisible, Source={x:Reference PauseMenuView}}">
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+            <Frame BackgroundColor="#CCFFFFFF" Padding="20" CornerRadius="10">
+                <Label Text="Menu Principal" FontSize="20" TextColor="Black"/>
+            </Frame>
+            
+            <Button Text="Continuer" Clicked="OnContinueClicked"/>
+            <Button Text="Quitter" Clicked="OnQuitClicked"/>
+        </StackLayout>
+    </Grid>
+    
+</ContentView>

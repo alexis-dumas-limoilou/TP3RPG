@@ -8,7 +8,7 @@ namespace TP3RPG
         {
             InitializeComponent();
 
-            MainPage = new CarteJeu();
+            MainPage = new MainMenu();
         }
     }
 }
