@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TP3RPG.Model
 {
-    internal class Joueur : ICombattants
+    public class Joueur : ICombattants
     {
         public string Nom { get; set; }
         public int PV { get; set; }

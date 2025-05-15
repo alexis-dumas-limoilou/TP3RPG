@@ -9,36 +9,35 @@ namespace TP3RPG.Model
     public class Carte
     {
         public List<Tuile> Tuiles { get; private set; } = new List<Tuile>();
-
+        static public int TailleCarte = 20;
+        static public int MilieuCarte = TailleCarte / 2;
         public Carte()
         {
             Tuiles = new List<Tuile>();
-            int tailleCarte = 20;
-            int milieuCarte = tailleCarte/2;
 
-            for(int i = 0; i<=tailleCarte; i++)
+            for(int i = 0; i<=TailleCarte; i++)
             {
                 Tuiles.Add(new Tuile(0, i, "Barriere"));
                 Tuiles.Add(new Tuile(i, 0, "Barriere"));
-                Tuiles.Add(new Tuile(tailleCarte, i, "Barriere"));
-                Tuiles.Add(new Tuile(i, tailleCarte, "Barriere"));
+                Tuiles.Add(new Tuile(TailleCarte, i, "Barriere"));
+                Tuiles.Add(new Tuile(i, TailleCarte, "Barriere"));
             }
 
-            for(int i = 1; i<tailleCarte; i++)
+            for(int i = 1; i<TailleCarte; i++)
             {
-                for (int j = 1; j < tailleCarte; j++)
+                for (int j = 1; j < TailleCarte; j++)
                 {
-                    if (i >= milieuCarte-2 && j >= milieuCarte-2 && i <= milieuCarte+2 && j <= milieuCarte+2)
+                    if (i >= MilieuCarte-2 && j >= MilieuCarte-2 && i <= MilieuCarte+2 && j <= MilieuCarte+2)
                     {
-                        if ((i == milieuCarte && j == milieuCarte - 2) || (i >= milieuCarte-1 && i<=milieuCarte+1 && j==milieuCarte-1) || (j==milieuCarte))
+                        if ((i == MilieuCarte && j == MilieuCarte - 2) || (i >= MilieuCarte-1 && i<=MilieuCarte+1 && j==MilieuCarte-1) || (j==MilieuCarte))
                         {
                             Tuiles.Add(new Tuile(i, j, "Toit"));
                         }
-                        else if (!(i == milieuCarte && j == milieuCarte + 2) && j>milieuCarte)
+                        else if (!(i == MilieuCarte && j == MilieuCarte + 2) && j>MilieuCarte)
                         {
                             Tuiles.Add(new Tuile(i, j, "Mur"));
                         }
-                        else if(!(i == milieuCarte && j == milieuCarte + 2))
+                        else if(!(i == MilieuCarte && j == MilieuCarte + 2))
                         {
                             Tuiles.Add(new Tuile(i, j, "Herbe"));
                         }

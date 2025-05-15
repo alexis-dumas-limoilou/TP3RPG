@@ -3,13 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              x:Class="TP3RPG.Pages.CarteJeu"
-             xmlns:controls="clr-namespace:TP3RPG.Vues"
+             xmlns:controls="clr-namespace:TP3RPG.Assets"
              xmlns:pages="clr-namespace:TP3RPG.Pages"
-             Title="Carte">
+             Title="Carte"> 
     <Grid>
         <Label Text="Mon Prototype" FontSize="24" HorizontalOptions="Center"/>
-        <skia:SKCanvasView x:Name="GameCanvas" PaintSurface="OnPaintSurface" />
-        <controls:Joystick x:Name="Joystick" />
+        <skia:SKCanvasView x:Name="GameCanvas" PaintSurface="OnPaintSurface"/>
 
         <!--<Grid x:Name="OverlayMenu"
               BackgroundColor="#80000000"

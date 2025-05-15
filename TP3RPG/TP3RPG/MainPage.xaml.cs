@@ -1,4 +1,9 @@
-﻿namespace TP3RPG
+﻿#if WINDOWS
+    using Windows.System;
+    using Microsoft.UI.Xaml.Input;
+#endif
+
+namespace TP3RPG
 {
     public partial class MainPage : ContentPage
     {
@@ -8,7 +13,6 @@
         {
             InitializeComponent();
         }
-
         private void OnCounterClicked(object sender, EventArgs e)
         {
             count++;
