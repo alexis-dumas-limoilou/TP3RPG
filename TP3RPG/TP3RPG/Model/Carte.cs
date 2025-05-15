@@ -11,6 +11,7 @@ namespace TP3RPG.Model
         public List<Tuile> Tuiles { get; private set; } = new List<Tuile>();
         static public int TailleCarte = 20;
         static public int MilieuCarte = TailleCarte / 2;
+        public Joueur Joueur { get; private set; }
         public Carte()
         {
             Tuiles = new List<Tuile>();
@@ -48,6 +49,12 @@ namespace TP3RPG.Model
                     }
                 }
             }
+            Joueur = new Joueur("Nicolas")
+            {
+                X = 3,
+                Y = 5
+            };
+
         }
     }
 }

@@ -1,65 +1,44 @@
-﻿using TP3RPG.Model;
-
-
-#if WINDOWS
-    using Windows.System;
-    using Microsoft.Maui.Controls.Platform;
-#endif
-
-
+﻿using SharpHook;
+using SharpHook.Native;
+using System.Diagnostics;
+using TP3RPG.Model;
 
 namespace TP3RPG.Assets
 {
     public class Controls
     {
         private Joueur joueur;
-        #if WINDOWS
-            private Microsoft.UI.Xaml.Window nativeWindow;
-        #endif
+        private EventSimulator simulator;
+        private TaskPoolGlobalHook globalHook;
         public Controls(Joueur joueur)
         {
             this.joueur = joueur;
-           
-            #if WINDOWS
-            var mauiWindow = Microsoft.Maui.Controls.Application.Current.Windows.FirstOrDefault();
-            if (mauiWindow?.Handler?.PlatformView is MauiWinUIWindow winuiWindow)
-            {
-                nativeWindow = winuiWindow;
-                nativeWindow.Activated += (s, e) =>
-                {
-                    nativeWindow.CoreWindow.KeyDown += OnKeyDown;
-                };
-            }
-            #endif
+            globalHook = new TaskPoolGlobalHook();
+            globalHook.KeyPressed += OnKeyDown;
+            globalHook.RunAsync();
         }
+        public event Action OnJoueurDéplacé;
 
-#if WINDOWS
-        private void OnKeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
+        private void OnKeyDown(object sender, KeyboardHookEventArgs args)
         {
-            Console.WriteLine($"KeyDown détecté: {args.VirtualKey}"); // Ajout
-            if (joueur == null) return; // Empêcher les erreurs null
+            if (joueur == null) return;
 
-            switch (args.VirtualKey)
+            switch (args.Data.KeyCode)
             {
-                case VirtualKey.Left:
+                case KeyCode.VcLeft:
                     joueur.SeDeplacer("gauche");
-                    Console.WriteLine("il va se deplacer a gauche");
                     break;
-                case VirtualKey.Right:
+                case KeyCode.VcRight:
                     joueur.SeDeplacer("droite");
-                    Console.WriteLine("il va se deplacer a droite");
                     break;
-                case VirtualKey.Up:
+                case KeyCode.VcUp:
                     joueur.SeDeplacer("haut");
-                    Console.WriteLine("il va se deplacer en haut");
                     break;
-                case VirtualKey.Down:
+                case KeyCode.VcDown:
                     joueur.SeDeplacer("bas");
-                    Console.WriteLine("il va se deplacer en bas");
                     break;
             }
+            OnJoueurDéplacé?.Invoke();
         }
-#endif
     }
-
 }

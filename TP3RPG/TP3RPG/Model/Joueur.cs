@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace TP3RPG.Model
         public int Degat { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
-        public int Vitesse { get; set; } = 1; // Vitesse de déplacement
+        public int Vitesse { get; set; } = 1;
 
         public Joueur(string nom)
         {
