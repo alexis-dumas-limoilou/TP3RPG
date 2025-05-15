@@ -66,6 +66,6 @@ public partial class CarteJeu : ContentPage
         float tuileSize = Hauteur / Carte.TailleCarte;
 
         SKPaint paintJoueur = new SKPaint { Color = SKColors.Blue };
-        canvas.DrawCircle(_Carte.Joueur.X * tuileSize, _Carte.Joueur.Y * tuileSize, tuileSize / 2, paintJoueur);
+        canvas.DrawCircle(_Carte.Joueur.X * tuileSize + (tuileSize / 2), _Carte.Joueur.Y * tuileSize + (tuileSize / 2), tuileSize / 2, paintJoueur);
     }   
 }
