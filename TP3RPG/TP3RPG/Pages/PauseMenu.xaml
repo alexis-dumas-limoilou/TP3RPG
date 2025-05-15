@@ -3,17 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TP3RPG.Pages.PauseMenu"
              x:Name="PauseMenuView">
-    
+
     <Grid BackgroundColor="#80000000"
           IsVisible="{Binding IsVisible, Source={x:Reference PauseMenuView}}">
-        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
-            <Frame BackgroundColor="#CCFFFFFF" Padding="20" CornerRadius="10">
-                <Label Text="Menu Principal" FontSize="20" TextColor="Black"/>
-            </Frame>
-            
+        <VerticalStackLayout>
+            <Border Stroke="Orange" StrokeThickness="5">
+                <Border Stroke="Black" StrokeThickness="5">
+                    <Frame BackgroundColor="Orange" Padding="20">
+                        <Label Text="PAUSE" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+                    </Frame>
+                </Border>
+            </Border>
+
             <Button Text="Continuer" Clicked="OnContinueClicked"/>
             <Button Text="Quitter" Clicked="OnQuitClicked"/>
-        </StackLayout>
+        </VerticalStackLayout>
     </Grid>
-    
+
 </ContentView>
