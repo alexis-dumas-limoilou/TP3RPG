@@ -8,32 +8,48 @@ namespace TP3RPG.Pages;
 
 public partial class CarteJeu : ContentPage
 {
-    private Carte _Carte;
-    private Controls _Controls;
-    private Joueur _Joueur;
-    private float Hauteur;
+    private Carte _carte;
+    private Controls _controls;
+    private Joueur _joueur;
+    private float tuileSize;
+    private double minCote;
+
     public CarteJeu()
     {
         InitializeComponent();
-        _Carte = new Carte();
-        _Joueur = _Carte.Joueur;
-        _Controls = new Controls(_Joueur);
-        _Controls.OnJoueurDéplacé += MettreAJourAffichage;
+        _carte = new Carte();
+        _joueur = _carte.Joueur;
+        _controls = new Controls(_joueur);
+        _controls.OnJoueurDéplacé += MettreAJourAffichage;
         canvasJoueur.PaintSurface += OnPaintSurfaceJoueur;
     }
+
     private void MettreAJourAffichage()
     {
         canvasJoueur.InvalidateSurface(); 
     }
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        CalculerTailleCarte(width, height);
+    }
+
+    private void CalculerTailleCarte(double width, double height)
+    {
+        minCote = height>width?width:height;
+        tuileSize = (float)(minCote / Carte.TailleCarte);
+
+    }
+
     private void OnPaintSurfaceCarte(object sender, SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
         canvas.Clear(SKColors.Black);
-        Hauteur = (float)Window.Height;
+        float offsetX = (e.Info.Width - (Carte.TailleCarte * tuileSize)) / 2;
+        float offsetY = (e.Info.Height - (Carte.TailleCarte * tuileSize)) / 2;
 
-        float tuileSize = Hauteur / Carte.TailleCarte;
 
-        foreach (Tuile tuile in _Carte.Tuiles)
+        foreach (Tuile tuile in _carte.Tuiles)
         {
             SKPaint paint = new SKPaint();
 
@@ -55,17 +71,17 @@ public partial class CarteJeu : ContentPage
                     paint.Color = SKColors.Blue;
                     break;
             }
-            canvas.DrawRect(tuile.X * tuileSize, tuile.Y * tuileSize, tuileSize, tuileSize, paint);
+            canvas.DrawRect(tuile.X * tuileSize + offsetX, tuile.Y * tuileSize + offsetY, tuileSize, tuileSize, paint);
         }
     }
     private void OnPaintSurfaceJoueur(object sender, SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
         canvas.Clear(SKColors.Transparent);
-
-        float tuileSize = Hauteur / Carte.TailleCarte;
+        float offsetX = (e.Info.Width - (Carte.TailleCarte * tuileSize)) / 2;
+        float offsetY = (e.Info.Height - (Carte.TailleCarte * tuileSize)) / 2;
 
         SKPaint paintJoueur = new SKPaint { Color = SKColors.Blue };
-        canvas.DrawCircle(_Carte.Joueur.X * tuileSize + (tuileSize / 2), _Carte.Joueur.Y * tuileSize + (tuileSize / 2), tuileSize / 2, paintJoueur);
+        canvas.DrawCircle(_carte.Joueur.X * tuileSize + (tuileSize / 2)+offsetX, _carte.Joueur.Y * tuileSize + (tuileSize / 2)+offsetY, tuileSize / 2, paintJoueur);
     }   
 }

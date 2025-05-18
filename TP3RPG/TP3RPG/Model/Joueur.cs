@@ -9,6 +9,7 @@ namespace TP3RPG.Model
 {
     public class Joueur : ICombattants
     {
+        private Carte _carte;
         public string Nom { get; set; }
         public int PV { get; set; }
         public int Degat { get; set; }
@@ -16,11 +17,14 @@ namespace TP3RPG.Model
         public int Y { get; set; }
         public int Vitesse { get; set; } = 1;
 
-        public Joueur(string nom)
+        public Joueur(string nom, Carte carte)
         {
             Nom = nom;
             PV = 100;
             Degat = 20;
+            _carte = carte;
+            X = 3;
+            Y = 5;
         }
 
 
@@ -35,19 +39,30 @@ namespace TP3RPG.Model
 
         public void SeDeplacer(string direction)
         {
+            Carte _carte = new();
+            int nouveauX;
+            int nouveauY;
             switch (direction)
             {
                 case "gauche":
-                    X -= Vitesse;
+                    nouveauX = X - Vitesse;
+                    if (_carte.GetTuile(nouveauX,Y).Traversable)
+                        X = nouveauX;
                     break;
                 case "droite":
-                    X += Vitesse;
+                    nouveauX = X + Vitesse;
+                    if (_carte.GetTuile(nouveauX, Y).Traversable)
+                        X = nouveauX;
                     break;
                 case "haut":
-                    Y -= Vitesse;
+                    nouveauY = Y - Vitesse;
+                    if (_carte.GetTuile(X, nouveauY).Traversable)
+                        Y = nouveauY;
                     break;
                 case "bas":
-                    Y += Vitesse;
+                    nouveauY = Y + Vitesse;
+                    if (_carte.GetTuile(X, nouveauY).Traversable)
+                        Y = nouveauY;
                     break;
             }
         }
