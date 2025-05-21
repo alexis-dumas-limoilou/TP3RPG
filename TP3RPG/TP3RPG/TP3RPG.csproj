@@ -76,6 +76,9 @@
 	  <MauiXaml Update="Pages\CarteJeu.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\InfoPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\MainMenu.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

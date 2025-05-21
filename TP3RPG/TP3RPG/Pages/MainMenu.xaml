@@ -11,6 +11,6 @@
 
         <Button Text="Nouvelle Partie" Clicked="OnNouvPartieClicked"/>
         <Button Text="Informations" Clicked="OnInfoClicked"/>
-        <Button Text="Quitter" Clicked="OnQuitClicked"/>
+        <Button Text="Quitter" Clicked="OnQuitClicked" IsVisible="{Binding IsWindows}"/>
     </VerticalStackLayout>
 </ContentPage>

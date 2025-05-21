@@ -22,6 +22,6 @@ public partial class PauseMenu : ContentView
 
     private void OnQuitClicked(object sender, EventArgs e)
     {
-        QuitClicked?.Invoke(this, EventArgs.Empty);
+        Application.Current.Quit();
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TP3RPG.Pages.InfoPage"
+             Title="InfoPage">
+    <VerticalStackLayout>
+        <Label Text="INFO" FontSize="20" TextColor="White" FontAttributes="Bold"/>
+        <Frame BackgroundColor="#e5e5e5">
+            <Label Text="Développé par Alexis Dumas et Nicolas Vergnac.&#10;Prototype d'un RPG 2D inspiré pas The Legend Of Zelda sur .NET MAUI" FontSize="15" TextColor="Black"/>
+        </Frame>
+        <Button Text="Back" Clicked="OnBackClicked"/>
+    </VerticalStackLayout>
+</ContentPage>
