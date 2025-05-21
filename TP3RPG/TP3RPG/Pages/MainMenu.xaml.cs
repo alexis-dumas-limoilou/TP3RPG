@@ -9,7 +9,7 @@ public partial class MainMenu : ContentPage
 
     private async void OnNouvPartieClicked(object sender, EventArgs e)
     {
-        App.Current.MainPage = new CarteJeu();
+        App.Current.MainPage = new CarteJeu(1);
     }
 
     private void OnInfoClicked(object sender, EventArgs e)

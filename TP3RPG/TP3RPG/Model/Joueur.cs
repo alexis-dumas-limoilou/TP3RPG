@@ -23,10 +23,7 @@ namespace TP3RPG.Model
             PV = 100;
             Degat = 20;
             _carte = carte;
-            X = 3;
-            Y = 5;
         }
-
 
         public void Attaquer(ICombattants cible)
         {
@@ -36,34 +33,32 @@ namespace TP3RPG.Model
                 cible.EliminerCombattant();
             }
         }
-
         public void SeDeplacer(string direction)
         {
-            Carte _carte = new();
-            int nouveauX;
-            int nouveauY;
+            Debug.WriteLine($"🎮 Avant déplacement : ({X}, {Y})");
+            int nouveauX=X;
+            int nouveauY=Y;
             switch (direction)
             {
                 case "gauche":
                     nouveauX = X - Vitesse;
-                    if (_carte.GetTuile(nouveauX,Y).Traversable)
-                        X = nouveauX;
                     break;
                 case "droite":
                     nouveauX = X + Vitesse;
-                    if (_carte.GetTuile(nouveauX, Y).Traversable)
-                        X = nouveauX;
                     break;
                 case "haut":
                     nouveauY = Y - Vitesse;
-                    if (_carte.GetTuile(X, nouveauY).Traversable)
-                        Y = nouveauY;
                     break;
                 case "bas":
                     nouveauY = Y + Vitesse;
-                    if (_carte.GetTuile(X, nouveauY).Traversable)
-                        Y = nouveauY;
                     break;
+            }
+            if (_carte.GetTuile(nouveauX, nouveauY).Traversable)
+            {
+                Debug.WriteLine("X :"+ nouveauX + " Y : " + nouveauY);
+                X = nouveauX;
+                Y = nouveauY;
+                _carte.LancerEvenementTuile(X, Y);
             }
         }
 

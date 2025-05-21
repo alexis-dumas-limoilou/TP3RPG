@@ -39,6 +39,9 @@ namespace TP3RPG.Assets
                     break;
             }
             OnJoueurDéplacé?.Invoke();
+            Debug.WriteLine($"✅ Après déplacement : ({joueur.X}, {joueur.Y})");
+
+
         }
     }
 }
