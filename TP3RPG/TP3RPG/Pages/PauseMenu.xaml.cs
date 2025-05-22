@@ -5,7 +5,7 @@ public partial class PauseMenu : ContentView
 	public PauseMenu()
 	{
 		InitializeComponent();
-        this.IsVisible = true;
+        this.IsVisible = false;
 	}
 
     public void Show() => this.IsVisible = true;

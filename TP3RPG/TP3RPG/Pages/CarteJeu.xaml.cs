@@ -9,6 +9,7 @@ namespace TP3RPG.Pages;
 
 public partial class CarteJeu : ContentPage
 {
+    public PauseMenu OverlayMenuPublic => OverlayMenu;
     private Carte _carte;
     private Controls _controls;
     private Joueur _joueur;
@@ -20,7 +21,7 @@ public partial class CarteJeu : ContentPage
         InitializeComponent();
         _carte = CarteService.CreerCarte(idCarte);
         _joueur = _carte.Joueur;
-        _controls = new Controls(_joueur);
+        _controls = new Controls(_joueur, this);
         _controls.OnJoueurDéplacé += MettreAJourAffichageJoueur;
         canvasJoueur.PaintSurface += OnPaintSurfaceJoueur;
         canvasCarte.PaintSurface += OnPaintSurfaceCarte;
@@ -64,22 +65,83 @@ public partial class CarteJeu : ContentPage
             switch (tuile.Type)
             {
                 case "Mur":
-                    paint.Color = SKColors.Gray;
+                    paint.Color = new SKColor(128, 128, 128);
+                    paint.Style = SKPaintStyle.Fill;
+                    paint.Shader = SKShader.CreateLinearGradient(
+                        new SKPoint(0, 0),
+                        new SKPoint(50, 50),
+                        new SKColor[]
+                        {
+                            new SKColor(110, 110, 110),
+                            new SKColor(150, 150, 150),
+                            new SKColor(180, 180, 180)
+                        },
+                        null,
+                        SKShaderTileMode.Clamp);
+                    paint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1);
                     break;
                 case "Herbe":
-                    paint.Color = SKColors.Green;
+                    var rand = new Random(tuile.X * 1000 + tuile.Y); // graine stable pour chaque position
+                    byte r = (byte)rand.Next(0, 20);
+                    byte g = (byte)(120 + rand.Next(30)); // vert variable
+                    byte b = (byte)rand.Next(0, 20);
+                    paint.Color = new SKColor(r, g, b);
+                    paint.Style = SKPaintStyle.Fill;
+                    
                     break;
                 case "Barriere":
-                    paint.Color = SKColors.Orange;
+                    SKBitmap motifBarriere = new SKBitmap((int)tuileSize, (int)tuileSize);
+                    using (var c = new SKCanvas(motifBarriere))
+                    {
+                        var fond = new SKPaint { Color = SKColors.SaddleBrown, Style = SKPaintStyle.Fill };
+                        c.DrawRect(0, 0, tuileSize, tuileSize, fond);
+
+                        var rainure = new SKPaint { Color = SKColors.Brown, Style = SKPaintStyle.Fill };
+                        for (int i = 0; i < tuileSize; i += 6)
+                        {
+                            c.DrawRect(i, 0, 2, tuileSize, rainure); // lignes verticales = planches
+                        }
+                    }
+                    paint.Shader = SKShader.CreateBitmap(motifBarriere, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                     break;
                 case "Toit":
-                    paint.Color = SKColors.Red;
-                    break;
+                    SKBitmap motifToit = new SKBitmap((int)tuileSize, (int)tuileSize);
+                    using (var c = new SKCanvas(motifToit))
+                    {
+                        var fond = new SKPaint { Color = SKColors.DarkRed, Style = SKPaintStyle.Fill };
+                        c.DrawRect(0, 0, tuileSize, tuileSize, fond);
+
+                        var ligne = new SKPaint { Color = SKColors.Black, Style = SKPaintStyle.Fill };
+                        for (int i = 0; i < tuileSize; i += 5)
+                        {
+                            c.DrawRect(0, i, tuileSize, 1, ligne); // Lignes horizontales
+                        }
+                    }
+                    paint.Shader = SKShader.CreateBitmap(motifToit, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat); break;
                 case "PorteOuverte":
                     paint.Color = SKColors.Black;
                     break;
                 case "Parquet":
-                    paint.Color = SKColors.Brown;
+                    SKBitmap motifParquet = new SKBitmap((int)tuileSize, (int)tuileSize);
+                    using (var c = new SKCanvas(motifParquet))
+                    {
+                        var fond = new SKPaint { Color = SKColors.SaddleBrown, Style = SKPaintStyle.Fill };
+                        c.DrawRect(0, 0, tuileSize, tuileSize, fond);
+
+                        var veinure = new SKPaint { Color = new SKColor(101, 67, 33), Style = SKPaintStyle.Fill };
+
+                        // Lignes horizontales irrégulières = fibres du bois
+                        for (int i = 3; i < tuileSize; i += 5)
+                        {
+                            c.DrawRect(0, i, tuileSize, 1, veinure);
+                        }
+
+                        // Eventuellement quelques nœuds
+                        veinure.Color = new SKColor(90, 50, 20, 120);
+                        c.DrawCircle(tuileSize / 2, tuileSize / 2, 3, veinure);
+                    }
+                    paint.Shader = SKShader.CreateBitmap(motifParquet, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+
                     break;
                 default:
                     paint.Color = SKColors.Blue;
@@ -105,11 +167,10 @@ public partial class CarteJeu : ContentPage
     {
         await this.FadeTo(0, 300);
         MettreAJourAffichageCarte();
-        Carte nouvelleCarte = CarteService.CreerCarte(numCarte);
-        _carte = nouvelleCarte;
-        _joueur = _carte.Joueur;
-        MettreAJourAffichageJoueur();
-        canvasJoueur.InvalidateSurface();
-        await this.FadeTo(1, 300);
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            App.Current.MainPage = new CarteJeu(numCarte);
+        });
+
     }
 }
