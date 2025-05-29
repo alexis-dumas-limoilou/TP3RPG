@@ -3,6 +3,7 @@ using SkiaSharp.Views.Maui;
 using TP3RPG.Model;
 using TP3RPG.Assets;
 using TP3RPG.Service;
+using SkiaSharp.Views.Maui.Controls;
 
 namespace TP3RPG.Pages;
 
@@ -10,12 +11,15 @@ public partial class CarteJeu : ContentPage
 {
     public PauseMenu OverlayMenuPublic => OverlayMenu;
     public Frame DialogueBox => dialogueBox;
+    public SKCanvasView CanvasEnnemi => canvasEnnemi;
     private Carte _carte;
     private Controls _controls;
     private Joueur _joueur;
     private PNJ _pnj;
     private float tuileSize;
     private double minCote;
+    public TaskCompletionSource<int> _choixReponses;
+    public TaskCompletionSource<bool> _dialogueContinue;
 
     public CarteJeu(int idCarte)
     {
@@ -179,6 +183,18 @@ public partial class CarteJeu : ContentPage
             canvas.DrawCircle(_carte.PNJ.X * tuileSize + (tuileSize / 2) + offsetX, _carte.PNJ.Y * tuileSize + (tuileSize / 2) + offsetY, tuileSize / 2, paintPNJ);
         }
     }
+    private void OnPaintSurfaceEnnemi(object sender, SKPaintSurfaceEventArgs e)
+    {
+        if (_carte.EnnemiVisible && _carte.Ennemi != null)
+        {
+            var canvas = e.Surface.Canvas;
+            canvas.Clear(SKColors.Transparent);
+            float offsetX = (e.Info.Width - (Carte.TailleCarte * tuileSize)) / 2;
+            float offsetY = (e.Info.Height - (Carte.TailleCarte * tuileSize)) / 2;
+            SKPaint paintEnnemi = new SKPaint { Color = SKColors.Red };
+            canvas.DrawCircle(_carte.Ennemi.X * tuileSize + (tuileSize / 2) + offsetX, _carte.Ennemi.Y * tuileSize + (tuileSize / 2) + offsetY, tuileSize / 2, paintEnnemi);
+        }
+    }
 
     public void ChangerCarte(int numCarte)
     {
@@ -206,39 +222,67 @@ public partial class CarteJeu : ContentPage
            
         if (lblDialogue == null || DialogueBox == null || _pnj == null)
             return;
+        _dialogueContinue = new TaskCompletionSource<bool>();
 
-        if (!DialogueBox.IsVisible)
+        MainThread.BeginInvokeOnMainThread(async () =>
         {
-            MainThread.BeginInvokeOnMainThread(async () =>
+            lblNomPNJ.Text = _pnj.Nom;
+            lblDialogue.Text = message;
+            DialogueBox.IsVisible = true;
+
+            await Task.Delay(50);
+            double boxWidth = DialogueBox.Width;
+
+            int retries = 5;
+            while (boxWidth <= 1 && retries > 0)
             {
-                lblNomPNJ.Text = _pnj.Nom;
-                lblDialogue.Text = message;
-                DialogueBox.IsVisible = true;
-
                 await Task.Delay(50);
-                double boxWidth = DialogueBox.Width;
+                boxWidth = DialogueBox.Width;
+                retries--;
+            }
 
-                int retries = 5;
-                while (boxWidth <= 1 && retries > 0)
-                {
-                    await Task.Delay(50);
-                    boxWidth = DialogueBox.Width;
-                    retries--;
-                }
+            DialogueBox.WidthRequest = Math.Max(5 * tuileSize, boxWidth);
 
-                DialogueBox.WidthRequest = Math.Max(5 * tuileSize, boxWidth);
+            var (offsetX, offsetY) = CalculerOffset();
+            double posX = (_pnj.X * tuileSize + (tuileSize / 2) + offsetX) - (boxWidth / 2);
+            double posY = (_pnj.Y * tuileSize + offsetY) - (3 * tuileSize);
 
-                var (offsetX, offsetY) = CalculerOffset();
-                double posX = (_pnj.X * tuileSize + (tuileSize / 2) + offsetX) - (boxWidth / 2);
-                double posY = (_pnj.Y * tuileSize + offsetY) - (3 * tuileSize);
+            DialogueBox.TranslationX = posX;
+            DialogueBox.TranslationY = posY;
 
-                DialogueBox.TranslationX = posX;
-                DialogueBox.TranslationY = posY;
+            await DialogueBox.FadeTo(1, 250);
+        });
 
-                await DialogueBox.FadeTo(1, 250);
-            });
-        }
+        await _dialogueContinue.Task;
+        _dialogueContinue = null;
     }
+
+    public async Task<int> AfficherDialogueAvecChoix(List<string> options)
+    {
+        _choixReponses = new TaskCompletionSource<int>();
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            choiceButtons.Children.Clear();
+
+            for (int i = 0; i < options.Count; i++)
+            {
+                int index = i;
+                var bouton = new Button { Text = options[i] };
+
+                bouton.Clicked += (s, e) =>
+                {
+                    choiceButtons.IsVisible = false;
+                    _choixReponses.TrySetResult(index);
+                };
+
+                choiceButtons.Children.Add(bouton);
+            }
+
+            choiceButtons.IsVisible = true;
+        });
+        return await _choixReponses.Task;
+    }
+
     public async Task FermerDialogue()
     {
         if (DialogueBox.IsVisible)
@@ -260,5 +304,11 @@ public partial class CarteJeu : ContentPage
         double offsetY = (canvasHeight - (Carte.TailleCarte * tuileSize)) / 2;
 
         return (offsetX, offsetY);
+    }
+
+    public void AjouterMonstre()
+    {
+        _carte.EnnemiVisible = true;
+        canvasEnnemi.InvalidateSurface();
     }
 }

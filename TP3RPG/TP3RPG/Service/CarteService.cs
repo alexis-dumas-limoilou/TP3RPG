@@ -94,6 +94,10 @@ namespace TP3RPG.Service
                 carte.PNJ = new PNJ(1, "Papi Muzot", carte);
                 carte.PNJ.X = 15;
                 carte.PNJ.Y = 12;
+                carte.Ennemi = new Ennemi(1, "rat", carte);
+                carte.Ennemi.PV = 3;
+                carte.Ennemi.X = 5;
+                carte.Ennemi.Y = 7;
             }
 
             return carte;

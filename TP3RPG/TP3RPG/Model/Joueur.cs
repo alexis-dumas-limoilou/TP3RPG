@@ -118,11 +118,29 @@ namespace TP3RPG.Model
                         if (!carteJeu.DialogueBox.IsVisible)
                         {
                             if (quete.Etat == 3)
-                               await carteJeu.AfficherDialogue("\"Merci à toi, jeune homme ! tu peux quitter ma maison, maintenant !\"");
+                                await carteJeu.AfficherDialogue("\"Merci à toi, jeune homme ! tu peux quitter ma maison, maintenant !\"");
                             else if (quete.Etat == 2)
                                 await carteJeu.AfficherDialogue("\"Et ben alors ? Tu ne vois pas que le rat est juste là ?\"");
                             else
+                            {
                                 await carteJeu.AfficherDialogue("\"Puisque tu t'invites chez les gens, pourrais-tu me rendre service ?\"");
+
+                                int reponse = await carteJeu.AfficherDialogueAvecChoix(new List<string> {"Avec plaisir !", "Non merci, je ne fais que squatter" });
+
+                                if (reponse==0)
+                                {
+                                    // L'utilisateur a répondu Oui
+                                    quete.Etat = 2;
+                                    await carteJeu.AfficherDialogue("\"Il y a une sale bête qui se permet de rentrer chez moi, et non je ne parle pas de toi.\"");
+                                    carteJeu.AjouterMonstre();
+                                    await carteJeu.AfficherDialogue("\"Ah ! le revoila ! Je compte sur toi pour m'en débarrasser !\"");
+                                }
+                                else
+                                {
+                                    // L'utilisateur a répondu Non
+                                    await carteJeu.AfficherDialogue("\"Mais qu'est-ce que c'est que ces manières ?\"");
+                                }
+                            }
                         }
                         else
                         {
@@ -132,5 +150,7 @@ namespace TP3RPG.Model
                     break;
             }
         }
+
+        
     }
 }

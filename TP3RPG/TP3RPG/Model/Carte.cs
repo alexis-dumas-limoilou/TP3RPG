@@ -14,6 +14,7 @@ namespace TP3RPG.Model
         static public int MilieuCarte = TailleCarte / 2;
         public Dictionary<(int, int), Action> EvenementsTuiles=new Dictionary<(int, int), Action>();
         public event Action<int> OnChangementCarte;
+        public bool EnnemiVisible { get; set; } = false;
 
         public Joueur Joueur { get; set; }
         public PNJ PNJ { get; set; }
@@ -50,5 +51,7 @@ namespace TP3RPG.Model
             else
                 return false;
         }
+
+       
     }
 }

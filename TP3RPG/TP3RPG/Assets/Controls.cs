@@ -63,7 +63,14 @@ namespace TP3RPG.Assets
                     });
                     break;
                 case KeyCode.VcSpace:
-                    await joueur.LancerAction();
+                    if (_carte._dialogueContinue != null)
+                    {
+                        _carte._dialogueContinue.TrySetResult(true);
+                    }
+                    else
+                    {
+                        await joueur.LancerAction();
+                    }
                     break;
             }
             OnJoueurDéplacé?.Invoke();

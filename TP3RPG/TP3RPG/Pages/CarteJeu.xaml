@@ -11,6 +11,7 @@
         <skia:SKCanvasView x:Name="canvasCarte" HorizontalOptions="Fill" VerticalOptions="Fill" PaintSurface="OnPaintSurfaceCarte"/>
         <skia:SKCanvasView x:Name="canvasJoueur" PaintSurface="OnPaintSurfaceJoueur"/>
         <skia:SKCanvasView x:Name="canvasPNJ" PaintSurface="OnPaintSurfacePNJ"/>
+        <skia:SKCanvasView x:Name="canvasEnnemi" PaintSurface="OnPaintSurfaceEnnemi"/>
         <Frame x:Name="dialogueBox" BackgroundColor="Blue" Padding="10" IsVisible="False" 
                BorderColor="White" CornerRadius="10" HasShadow="True"
                HorizontalOptions="Start" VerticalOptions="Start"
@@ -20,10 +21,13 @@
                 <Label x:Name="lblNomPNJ" Text="Nom du PNJ" 
                        TextColor="White" FontSize="18" Margin="0,0,0,10" FontFamily="RetroFont"/>
                 <Label x:Name="lblDialogue" Text="message" 
-                        TextColor="White" FontSize="18" FontFamily="RetroFont" 
-                        HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        TextColor="White" FontSize="18" FontFamily="RetroFont"/>
+
+                <StackLayout Orientation="Horizontal" Spacing="20" IsVisible="False" x:Name="choiceButtons"/>
             </StackLayout>
         </Frame>
+       
+
 
 
         <!--<Grid x:Name="OverlayMenu"

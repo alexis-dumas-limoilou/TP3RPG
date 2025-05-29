@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TP3RPG.Pages;
+using TP3RPG.Service;
 
 namespace TP3RPG.Model
 {
@@ -19,8 +21,9 @@ namespace TP3RPG.Model
         public int Vitesse { get; set; } = 1;
         public int Direction { get; set; }
 
-        public Ennemi(string nom, Carte carte)
+        public Ennemi(int id, string nom, Carte carte)
         {
+            Id = id;
             Nom = nom;
             PV = 100;
             Degat = 20;
@@ -75,7 +78,11 @@ namespace TP3RPG.Model
         }
         public void EliminerCombattant()
         {
-            throw new NotImplementedException();
+            if (GameManager.CarteActuelle is CarteJeu carteJeu)
+            {
+                _carte.EnnemiVisible = false;
+                carteJeu.CanvasEnnemi.InvalidateSurface();
+            }
         }
 
         public async Task LancerAction()
