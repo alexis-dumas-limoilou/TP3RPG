@@ -6,6 +6,7 @@
              xmlns:controls="clr-namespace:TP3RPG.Assets"
              xmlns:pages="clr-namespace:TP3RPG.Pages"
              Title="Carte">
+
     <Grid x:Name="gridCarte" >
         <Label Text="Mon Prototype" FontSize="24" HorizontalOptions="Center"/>
         <skia:SKCanvasView x:Name="canvasCarte" HorizontalOptions="Fill" VerticalOptions="Fill" PaintSurface="OnPaintSurfaceCarte"/>
@@ -29,6 +30,25 @@
        
 
 
+        
+
+        <Grid VerticalOptions="End" HorizontalOptions="Center" TranslationY="-50">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="ButtonUp" IsVisible="False" Text="up" Grid.Row="0" Grid.Column="1" HeightRequest="50" Command="{Binding ControlButtonClickedCommand}" CommandParameter="haut"/>
+            <Button x:Name="ButtonDown" IsVisible="False" Text="down" Grid.Row="1" Grid.Column="1" HeightRequest="50" Command="{Binding ControlButtonClickedCommand}" CommandParameter="bas"/>
+            <Button x:Name="ButtonLeft" IsVisible="False" Text="left" Grid.Row="1" Grid.Column="0" HeightRequest="50" Command="{Binding ControlButtonClickedCommand}" CommandParameter="gauche"/>
+            <Button x:Name="ButtonRight" IsVisible="False" Text="right" Grid.Row="1" Grid.Column="2" HeightRequest="50" Command="{Binding ControlButtonClickedCommand}" CommandParameter="droite"/>
+            <Button x:Name="ButtonInteract" IsVisible="False" Text="E" Grid.Row="0" Grid.Column="2" HeightRequest="40" WidthRequest="90" Command="{Binding ControlButtonClickedCommand}" CommandParameter="action"/>
+            <Button x:Name="ButtonPause" IsVisible="False" Text="Pause" Grid.Row="0" Grid.Column="0" HeightRequest="40" WidthRequest="90" Command="{Binding ControlButtonClickedCommand}" CommandParameter="pause"/>
+        </Grid>
 
         <!--<Grid x:Name="OverlayMenu"
               BackgroundColor="#80000000"
@@ -46,4 +66,5 @@
 
         <pages:PauseMenu    x:Name="OverlayMenu"/>
     </Grid>
+    
 </ContentPage>

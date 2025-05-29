@@ -3,6 +3,7 @@ using SkiaSharp.Views.Maui;
 using TP3RPG.Model;
 using TP3RPG.Assets;
 using TP3RPG.Service;
+using System.Windows.Input;
 using SkiaSharp.Views.Maui.Controls;
 
 namespace TP3RPG.Pages;
@@ -21,9 +22,16 @@ public partial class CarteJeu : ContentPage
     public TaskCompletionSource<int> _choixReponses;
     public TaskCompletionSource<bool> _dialogueContinue;
 
+    public ICommand ControlButtonClickedCommand { get; }
+
     public CarteJeu(int idCarte)
     {
+#if ANDROID
+        ControlButtonClickedCommand = new Command<string>(OnControlButtonClicked);
+#endif
+
         InitializeComponent();
+        BindingContext = this;
         _carte = CarteService.CreerCarte(idCarte);
         _joueur = _carte.Joueur;
         _pnj = _carte.PNJ;
@@ -37,6 +45,15 @@ public partial class CarteJeu : ContentPage
             canvasPNJ.PaintSurface += OnPaintSurfacePNJ;
         }
         _carte.OnChangementCarte += ChangerCarte;
+
+#if ANDROID
+        ButtonUp.IsVisible = true;
+        ButtonDown.IsVisible = true;
+        ButtonLeft.IsVisible = true;
+        ButtonRight.IsVisible = true;
+        ButtonInteract.IsVisible = true;
+        ButtonPause.IsVisible = true;
+#endif
     }
 
     private void MettreAJourAffichageJoueur()
@@ -304,11 +321,5 @@ public partial class CarteJeu : ContentPage
         double offsetY = (canvasHeight - (Carte.TailleCarte * tuileSize)) / 2;
 
         return (offsetX, offsetY);
-    }
-
-    public void AjouterMonstre()
-    {
-        _carte.EnnemiVisible = true;
-        canvasEnnemi.InvalidateSurface();
     }
 }
