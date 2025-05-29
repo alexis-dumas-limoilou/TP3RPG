@@ -3,6 +3,8 @@ using SkiaSharp.Views.Maui;
 using TP3RPG.Model;
 using TP3RPG.Assets;
 using TP3RPG.Service;
+using System.Windows.Input;
+using System.Diagnostics;
 
 namespace TP3RPG.Pages;
 
@@ -17,9 +19,16 @@ public partial class CarteJeu : ContentPage
     private float tuileSize;
     private double minCote;
 
+    public ICommand ControlButtonClickedCommand { get; }
+
     public CarteJeu(int idCarte)
     {
+#if ANDROID
+        ControlButtonClickedCommand = new Command<string>(OnControlButtonClicked);
+#endif
+
         InitializeComponent();
+        BindingContext = this;
         _carte = CarteService.CreerCarte(idCarte);
         _joueur = _carte.Joueur;
         _pnj = _carte.PNJ;
@@ -33,6 +42,15 @@ public partial class CarteJeu : ContentPage
             canvasPNJ.PaintSurface += OnPaintSurfacePNJ;
         }
         _carte.OnChangementCarte += ChangerCarte;
+
+#if ANDROID
+        ButtonUp.IsVisible = true;
+        ButtonDown.IsVisible = true;
+        ButtonLeft.IsVisible = true;
+        ButtonRight.IsVisible = true;
+        ButtonInteract.IsVisible = true;
+        ButtonPause.IsVisible = true;
+#endif
     }
 
     private void MettreAJourAffichageJoueur()
@@ -260,5 +278,23 @@ public partial class CarteJeu : ContentPage
         double offsetY = (canvasHeight - (Carte.TailleCarte * tuileSize)) / 2;
 
         return (offsetX, offsetY);
+    }
+
+    private async void OnControlButtonClicked(string direction)
+    {
+        switch (direction)
+        {
+            case "action":
+                await _joueur.LancerAction();
+                break;
+            case "pause":
+                OverlayMenuPublic.Show();
+                break;
+            default:
+                _joueur.SeDeplacer(direction);
+                break;
+        }
+
+        MettreAJourAffichageJoueur();
     }
 }
