@@ -322,4 +322,13 @@ public partial class CarteJeu : ContentPage
 
         return (offsetX, offsetY);
     }
+
+    public void AjouterMonstre()
+    {
+        if (GameManager.CarteActuelle is CarteJeu carteJeu)
+        {
+            _carte.EnnemiVisible = true;
+            carteJeu.canvasEnnemi.InvalidateSurface();
+        }
+    }
 }
