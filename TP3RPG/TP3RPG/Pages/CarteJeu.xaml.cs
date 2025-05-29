@@ -331,4 +331,28 @@ public partial class CarteJeu : ContentPage
             carteJeu.canvasEnnemi.InvalidateSurface();
         }
     }
+
+    private async void OnControlButtonClicked(string direction)
+    {
+        switch (direction)
+        {
+            case "action":
+                if (_dialogueContinue != null)
+                {
+                    _dialogueContinue.TrySetResult(true);
+                }
+                else
+                {
+                    await _joueur.LancerAction();
+                }
+                break;
+            case "pause":
+                OverlayMenuPublic.Show();
+                break;
+            default:
+                _joueur.SeDeplacer(direction);
+                break;
+        }
+        MettreAJourAffichageJoueur();
+    }
 }
