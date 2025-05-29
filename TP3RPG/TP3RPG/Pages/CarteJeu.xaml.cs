@@ -3,16 +3,17 @@ using SkiaSharp.Views.Maui;
 using TP3RPG.Model;
 using TP3RPG.Assets;
 using TP3RPG.Service;
-using System.Diagnostics;
 
 namespace TP3RPG.Pages;
 
 public partial class CarteJeu : ContentPage
 {
     public PauseMenu OverlayMenuPublic => OverlayMenu;
+    public Frame DialogueBox => dialogueBox;
     private Carte _carte;
     private Controls _controls;
     private Joueur _joueur;
+    private PNJ _pnj;
     private float tuileSize;
     private double minCote;
 
@@ -21,10 +22,16 @@ public partial class CarteJeu : ContentPage
         InitializeComponent();
         _carte = CarteService.CreerCarte(idCarte);
         _joueur = _carte.Joueur;
+        _pnj = _carte.PNJ;
         _controls = new Controls(_joueur, this);
         _controls.OnJoueurDéplacé += MettreAJourAffichageJoueur;
         canvasJoueur.PaintSurface += OnPaintSurfaceJoueur;
         canvasCarte.PaintSurface += OnPaintSurfaceCarte;
+        canvasPNJ.InvalidateSurface();
+        if (_carte.PNJ != null)
+        {
+            canvasPNJ.PaintSurface += OnPaintSurfacePNJ;
+        }
         _carte.OnChangementCarte += ChangerCarte;
     }
 
@@ -33,7 +40,7 @@ public partial class CarteJeu : ContentPage
         _joueur.X = _carte.Joueur.X;
         _joueur.Y = _carte.Joueur.Y;
 
-        canvasJoueur.InvalidateSurface(); 
+        canvasJoueur.InvalidateSurface();
     }
     private void MettreAJourAffichageCarte()
     {
@@ -159,18 +166,99 @@ public partial class CarteJeu : ContentPage
         SKPaint paintJoueur = new SKPaint { Color = SKColors.Blue };
         canvas.DrawCircle(_carte.Joueur.X * tuileSize + (tuileSize / 2)+offsetX, _carte.Joueur.Y * tuileSize + (tuileSize / 2)+offsetY, tuileSize / 2, paintJoueur);
     }
+
+    private void OnPaintSurfacePNJ(object sender, SKPaintSurfaceEventArgs e)
+    {
+        if (_carte.PNJ != null)
+        {
+            var canvas = e.Surface.Canvas;
+            canvas.Clear(SKColors.Transparent);
+            float offsetX = (e.Info.Width - (Carte.TailleCarte * tuileSize)) / 2;
+            float offsetY = (e.Info.Height - (Carte.TailleCarte * tuileSize)) / 2;
+            SKPaint paintPNJ = new SKPaint { Color = SKColors.Purple };
+            canvas.DrawCircle(_carte.PNJ.X * tuileSize + (tuileSize / 2) + offsetX, _carte.PNJ.Y * tuileSize + (tuileSize / 2) + offsetY, tuileSize / 2, paintPNJ);
+        }
+    }
+
     public void ChangerCarte(int numCarte)
     {
         _ = EffectuerChangementCarte(numCarte);
     }
+
     private async Task EffectuerChangementCarte(int numCarte)
     {
         await this.FadeTo(0, 300);
         MettreAJourAffichageCarte();
+        if (_controls != null)
+        {
+            _controls.Dispose();
+        }
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            App.Current.MainPage = new CarteJeu(numCarte);
+            GameManager.CarteActuelle =new CarteJeu(numCarte);
+            App.Current.MainPage = GameManager.CarteActuelle;
         });
 
+    }
+
+    public async Task AfficherDialogue(string message)
+    {
+           
+        if (lblDialogue == null || DialogueBox == null || _pnj == null)
+            return;
+
+        if (!DialogueBox.IsVisible)
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                lblNomPNJ.Text = _pnj.Nom;
+                lblDialogue.Text = message;
+                DialogueBox.IsVisible = true;
+
+                await Task.Delay(50);
+                double boxWidth = DialogueBox.Width;
+
+                int retries = 5;
+                while (boxWidth <= 1 && retries > 0)
+                {
+                    await Task.Delay(50);
+                    boxWidth = DialogueBox.Width;
+                    retries--;
+                }
+
+                DialogueBox.WidthRequest = Math.Max(5 * tuileSize, boxWidth);
+
+                var (offsetX, offsetY) = CalculerOffset();
+                double posX = (_pnj.X * tuileSize + (tuileSize / 2) + offsetX) - (boxWidth / 2);
+                double posY = (_pnj.Y * tuileSize + offsetY) - (3 * tuileSize);
+
+                DialogueBox.TranslationX = posX;
+                DialogueBox.TranslationY = posY;
+
+                await DialogueBox.FadeTo(1, 250);
+            });
+        }
+    }
+    public async Task FermerDialogue()
+    {
+        if (DialogueBox.IsVisible)
+        {
+            await DialogueBox.FadeTo(0, 200);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                DialogueBox.IsVisible = false;
+            });
+        }
+    }
+
+    (double offsetX, double offsetY) CalculerOffset()
+    {
+        double canvasWidth = canvasCarte.Width;
+        double canvasHeight = canvasCarte.Height;
+
+        double offsetX = (canvasWidth - (Carte.TailleCarte * tuileSize)) / 2;
+        double offsetY = (canvasHeight - (Carte.TailleCarte * tuileSize)) / 2;
+
+        return (offsetX, offsetY);
     }
 }

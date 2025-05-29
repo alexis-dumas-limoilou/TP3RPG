@@ -14,9 +14,11 @@ namespace TP3RPG.Model
         int X {  get; set; }
         int Y { get; set; }
         int Vitesse { get; set; }
+        int Direction { get; set; }
 
         void SeDeplacer(string direction);
-        void Attaquer(ICombattants cible);
+        void Attaquer(Ennemi cible);
+        Task LancerAction();
         void EliminerCombattant();
     }
 }

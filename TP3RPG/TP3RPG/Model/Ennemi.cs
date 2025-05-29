@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TP3RPG.Pages;
-using TP3RPG.Service;
 
 namespace TP3RPG.Model
 {
-    public class Joueur : ICombattants
+    public class Ennemi : ICombattants
     {
         private Carte _carte;
+        public int Id { get; set; }
         public string Nom { get; set; }
         public int PV { get; set; }
         public int Degat { get; set; }
@@ -21,7 +19,7 @@ namespace TP3RPG.Model
         public int Vitesse { get; set; } = 1;
         public int Direction { get; set; }
 
-        public Joueur(string nom, Carte carte)
+        public Ennemi(string nom, Carte carte)
         {
             Nom = nom;
             PV = 100;
@@ -44,26 +42,26 @@ namespace TP3RPG.Model
             switch (direction)
             {
                 case "gauche":
-                    if (_carte.Joueur.Direction != 4)
-                        _carte.Joueur.Direction = 4;
+                    if (_carte.Ennemi.Direction != 4)
+                        _carte.Ennemi.Direction = 4;
                     else
                         nouveauX = X - Vitesse;
                     break;
                 case "droite":
-                    if (_carte.Joueur.Direction != 2)
-                        _carte.Joueur.Direction = 2;
+                    if (_carte.Ennemi.Direction != 2)
+                        _carte.Ennemi.Direction = 2;
                     else
                         nouveauX = X + Vitesse;
                     break;
                 case "haut":
-                    if (_carte.Joueur.Direction != 1)
-                        _carte.Joueur.Direction = 1;
+                    if (_carte.Ennemi.Direction != 1)
+                        _carte.Ennemi.Direction = 1;
                     else
                         nouveauY = Y - Vitesse;
                     break;
                 case "bas":
-                    if (_carte.Joueur.Direction != 3)
-                        _carte.Joueur.Direction = 3;
+                    if (_carte.Ennemi.Direction != 3)
+                        _carte.Ennemi.Direction = 3;
                     else
                         nouveauY = Y + Vitesse;
                     break;
@@ -97,38 +95,6 @@ namespace TP3RPG.Model
                     break;
                 case 3:
                     nouveauY = Y + Vitesse;
-                    break;
-            }
-            if (_carte.PNJExiste(nouveauX, nouveauY))
-               await LancerConversation(_carte.PNJ.Id);
-            else if (_carte.EnnemiExiste(nouveauX, nouveauY))
-                Attaquer(_carte.Ennemi);
-        }
-
-        public async Task LancerConversation(int idPNJ)
-        {
-            CarteJeu carteJeu = GameManager.CarteActuelle;
-            switch (idPNJ)
-            {
-                case 1:
-                     Quete quete = QueteService.Instance.ObtenirQuete(1);
-
-                    if (quete != null)
-                    {
-                        if (!carteJeu.DialogueBox.IsVisible)
-                        {
-                            if (quete.Etat == 3)
-                               await carteJeu.AfficherDialogue("\"Merci à toi, jeune homme ! tu peux quitter ma maison, maintenant !\"");
-                            else if (quete.Etat == 2)
-                                await carteJeu.AfficherDialogue("\"Et ben alors ? Tu ne vois pas que le rat est juste là ?\"");
-                            else
-                                await carteJeu.AfficherDialogue("\"Puisque tu t'invites chez les gens, pourrais-tu me rendre service ?\"");
-                        }
-                        else
-                        {
-                            await carteJeu.FermerDialogue();
-                        }
-                    }
                     break;
             }
         }

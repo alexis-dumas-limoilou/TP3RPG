@@ -12,19 +12,35 @@ namespace TP3RPG.Assets
         private CarteJeu _carte;
         private EventSimulator simulator;
         private TaskPoolGlobalHook globalHook;
+        private bool isDisposed = false;
         public Controls(Joueur joueur, CarteJeu carte)
         {
             this.joueur = joueur;
             this._carte = carte;
+
             globalHook = new TaskPoolGlobalHook();
             globalHook.KeyPressed += OnKeyDown;
             globalHook.RunAsync();
         }
         public event Action OnJoueurDéplacé;
 
-        private void OnKeyDown(object sender, KeyboardHookEventArgs args)
+        public void Dispose()
         {
-            if (joueur == null) return;
+            if (!isDisposed)
+            {
+                isDisposed = true;
+                if (globalHook != null)
+                {
+                    globalHook.KeyPressed -= OnKeyDown;
+                    globalHook.Dispose();
+                    globalHook = null;
+                }
+            }
+        }
+
+        private async void OnKeyDown(object sender, KeyboardHookEventArgs args)
+        {
+            if (isDisposed || joueur == null) return;
 
             switch (args.Data.KeyCode)
             {
@@ -47,7 +63,7 @@ namespace TP3RPG.Assets
                     });
                     break;
                 case KeyCode.VcSpace:
-                    
+                    await joueur.LancerAction();
                     break;
             }
             OnJoueurDéplacé?.Invoke();

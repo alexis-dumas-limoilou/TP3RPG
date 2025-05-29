@@ -10,6 +10,21 @@
         <Label Text="Mon Prototype" FontSize="24" HorizontalOptions="Center"/>
         <skia:SKCanvasView x:Name="canvasCarte" HorizontalOptions="Fill" VerticalOptions="Fill" PaintSurface="OnPaintSurfaceCarte"/>
         <skia:SKCanvasView x:Name="canvasJoueur" PaintSurface="OnPaintSurfaceJoueur"/>
+        <skia:SKCanvasView x:Name="canvasPNJ" PaintSurface="OnPaintSurfacePNJ"/>
+        <Frame x:Name="dialogueBox" BackgroundColor="Blue" Padding="10" IsVisible="False" 
+               BorderColor="White" CornerRadius="10" HasShadow="True"
+               HorizontalOptions="Start" VerticalOptions="Start"
+               TranslationX="0"
+               TranslationY="0">
+            <StackLayout VerticalOptions="FillAndExpand">
+                <Label x:Name="lblNomPNJ" Text="Nom du PNJ" 
+                       TextColor="White" FontSize="18" Margin="0,0,0,10" FontFamily="RetroFont"/>
+                <Label x:Name="lblDialogue" Text="message" 
+                        TextColor="White" FontSize="18" FontFamily="RetroFont" 
+                        HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+            </StackLayout>
+        </Frame>
+
 
         <!--<Grid x:Name="OverlayMenu"
               BackgroundColor="#80000000"

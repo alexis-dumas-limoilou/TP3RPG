@@ -1,3 +1,5 @@
+using TP3RPG.Service;
+
 namespace TP3RPG.Pages;
 
 public partial class MainMenu : ContentPage
@@ -14,6 +16,8 @@ public partial class MainMenu : ContentPage
 
     private async void OnNouvPartieClicked(object sender, EventArgs e)
     {
+        QueteService queteService = new QueteService();
+
         App.Current.MainPage = new CarteJeu(1);
     }
 

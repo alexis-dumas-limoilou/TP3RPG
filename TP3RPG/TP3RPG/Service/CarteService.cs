@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using TP3RPG.Model;
+﻿using TP3RPG.Model;
+using TP3RPG.Pages;
 
 namespace TP3RPG.Service
 {
@@ -58,12 +58,17 @@ namespace TP3RPG.Service
 
 
                 case 2:
-                    for (int i = 0; i <= Carte.TailleCarte; i++)
+                    for (int i = 0, j = 0; i <= Carte.TailleCarte; i++, j++)
                     {
+                        carte.Tuiles.Add(new Tuile(10, 20, "PorteOuverte", true));
+                       
                         carte.Tuiles.Add(new Tuile(0, i, "Mur", false));
                         carte.Tuiles.Add(new Tuile(i, 0, "Mur", false));
                         carte.Tuiles.Add(new Tuile(Carte.TailleCarte, i, "Mur", false));
-                        carte.Tuiles.Add(new Tuile(i, Carte.TailleCarte, "Mur", false));
+                        if (!(i == 10))
+                        {
+                            carte.Tuiles.Add(new Tuile(i, Carte.TailleCarte, "Mur", false));
+                        }
                     }
                     for (int i = 1; i < Carte.TailleCarte; i++)
                     {
@@ -71,7 +76,9 @@ namespace TP3RPG.Service
                         {
                             carte.Tuiles.Add(new Tuile(i, j, "Parquet", true));
                         }
+                        
                     }
+                    carte.EvenementsTuiles[(10, 20)] = () => carte.DéclencherChangementCarte(1);
                     break;
             }
 
@@ -84,6 +91,9 @@ namespace TP3RPG.Service
             {
                 carte.Joueur.X = 10;
                 carte.Joueur.Y = 19;
+                carte.PNJ = new PNJ(1, "Papi Muzot", carte);
+                carte.PNJ.X = 15;
+                carte.PNJ.Y = 12;
             }
 
             return carte;

@@ -15,9 +15,10 @@ namespace TP3RPG.Model
         public Dictionary<(int, int), Action> EvenementsTuiles=new Dictionary<(int, int), Action>();
         public event Action<int> OnChangementCarte;
 
-
         public Joueur Joueur { get; set; }
-        
+        public PNJ PNJ { get; set; }
+        public Ennemi Ennemi { get; set; }
+
         public Tuile GetTuile(int x, int y)
         {
             return Tuiles.FirstOrDefault(t => t.X == x && t.Y == y);
@@ -34,7 +35,20 @@ namespace TP3RPG.Model
         {
             OnChangementCarte?.Invoke(idCarte);
         }
+        public bool PNJExiste(int x, int y)
+        {
+            if(PNJ !=null)
+                return (PNJ.X == x && PNJ.Y == y);
+            else
+                return false;
+        }
 
-
+        public bool EnnemiExiste(int x, int y)
+        {
+            if (Ennemi != null)
+                return (Ennemi.X == x && Ennemi.Y == y);
+            else
+                return false;
+        }
     }
 }
